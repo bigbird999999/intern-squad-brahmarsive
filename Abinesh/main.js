@@ -1,4 +1,4 @@
-// Testing
+// Check
 import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 
