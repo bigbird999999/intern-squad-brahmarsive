@@ -1,4 +1,3 @@
-
 import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 
@@ -19,6 +18,8 @@ var camera = new BABYLON.ArcRotateCamera(
   scene
 );
 camera.setPosition(new BABYLON.Vector3(-20, 140, -470));
+camera.inputs.clear();
+// camera.useAutoRotationBehavior = true;
 // camera.rotation(new BABYLON.Vector3(200,500,200));
 camera.attachControl(canvas, true);
 
@@ -143,41 +144,54 @@ BABYLON.SceneLoader.ImportMesh(
   "bow_and_arrow_a.glb",
   scene,
   function (meshes) {
-    meshes[0].isVisible = false;
-    meshes[1].isVisible = false;
+    // meshes[0].isVisible = false;
+    // meshes[1].isVisible = false;
     meshes[3].isVisible = false;
-    var bow = meshes[2];
+    var bow = meshes[0];
+
+    const utilLayer = new BABYLON.UtilityLayerRenderer(scene);
+    const rotationGizmo = new BABYLON.RotationGizmo(utilLayer);
+    rotationGizmo.attachedMesh = meshes[0];
+
+    rotationGizmo._rootMesh.getChildren().forEach((bow) => {
+      if (bow.name.includes("y")) {
+        console.log(1);
+        bow.isVisible = false;
+      }
+    });
+
     bow.scaling = new BABYLON.Vector3(1, 1, 1); // Adjust scaling as needed
-    bow.position = new BABYLON.Vector3(10, 125, -400); // Set position
+    bow.position = new BABYLON.Vector3(-10, 125, -400); // Set position
     bow.rotation = new BABYLON.Vector3(0, 0, 0); //et rotation
   }
 );
 
-BABYLON.SceneLoader.ImportMesh(
-  "",
-  "/models/",
-  "bow_and_arrow_a.glb",
-  scene,
-  function (meshes) {
-    var bow = meshes[1];
-    // stopSpecificAnimation(meshes[1], bow_and_arrow_a)
-    meshes[0].isVisible = false;
-    meshes[2].isVisible = false;
-    meshes[3].isVisible = false;
-    bow.scaling = new BABYLON.Vector3(1, 1, 1); // Adjust scaling as needed
-    bow.position = new BABYLON.Vector3(10, 125, -400); // Set position
-    bow.rotation = new BABYLON.Vector3(0, 0, 0); //et rotation
-  }
-);
+// BABYLON.SceneLoader.ImportMesh(
+//   "",
+//   "/models/",
+//   "bow_and_arrow_a.glb",
+//   scene,
+//   function (meshes) {
+//     // meshes.addAllToScene();
 
-function stopSpecificAnimation(mesh, animationName) {
-  // Find the animation by name
-  const animation = mesh.animations.find(anim => anim.name === animationName);
-  if (animation) {
-    // Set the animation speed to 0 to stop it
-    animation.speedRatio = 0;
-  }
-}
+//     var bow = meshes[1];
+//     meshes[0].isVisible = false;
+//     meshes[2].isVisible = false;
+//     meshes[3].isVisible = false;
+//     bow.scaling = new BABYLON.Vector3(1, 1, 1); // Adjust scaling as needed
+//     bow.position = new BABYLON.Vector3(10, 125, -400); // Set position
+//     bow.rotation = new BABYLON.Vector3(0, 0, 0); //et rotation
+//   }
+// );
+
+// function stopSpecificAnimation(mesh, animationName) {
+//   // Find the animation by name
+//   const animation = mesh.animations.find(anim => anim.name === animationName);
+//   if (animation) {
+//     // Set the animation speed to 0 to stop it
+//     animation.speedRatio = 0;
+//   }
+// }
 
 let bowMesh = null;
 let moveSpeed = 2;
@@ -196,8 +210,6 @@ BABYLON.SceneLoader.ImportMesh(
     bowMesh.rotation = new BABYLON.Vector3(0, 0, 0.1); //et rotation
   }
 );
-
-
 
 BABYLON.SceneLoader.ImportMesh(
   "",
